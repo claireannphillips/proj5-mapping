@@ -1,20 +1,28 @@
 Lat:
-<input id="lat" name="lat" val="40.713956" />Long:
-<input id="long" name="long" val="74.006653" />
+<input id="lat" name="lat" val="44.0521" />Long:
+<input id="long" name="long" val="-123.0868" />
 <br />
 <br />
 <div id="map_canvas" style="width: 500px; height: 250px;"></div>
+
+
+
+
+
 <link rel="stylesheet" type="text/css" href="/static/css/map.css"
    media="screen"/> 
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
 
+
+
 <script type="text/javascript">
 
-  var map;
+var map;
 var marker;
 
+
 function initialize() {
-  var myLatlng = new google.maps.LatLng(40.713956, -74.006653);
+  var myLatlng = new google.maps.LatLng(44.0521, -123.0868);
 
   var myOptions = {
     zoom: 8,

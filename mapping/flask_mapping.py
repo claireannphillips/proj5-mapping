@@ -7,7 +7,7 @@ Replacement for RUSA ACP brevet time calculator
 import flask
 from flask import request
 import arrow  # Replacement for datetime, based on moment.js
-import acp_times  # Brevet time calculations
+# Brevet time calculations
 import config
 
 import logging
