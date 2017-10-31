@@ -28,6 +28,16 @@ app.secret_key = CONFIG.SECRET_KEY
 @app.route("/index")
 def index():
     app.logger.debug("Main page entry")
+    
+    f = open('long_lat.txt', 'r')
+    poi = []
+    for num in f:
+        x = { } 
+        parts = num.split(",")
+        x['key'] = parts[0]
+        x['value'] = [parts[1],parts[2]]
+        poi.append(x)
+    flask.g.poi = poi #to use in jinja
     return flask.render_template('map.html')
 
 
@@ -35,7 +45,7 @@ def index():
 def page_not_found(error):
     app.logger.debug("Page not found")
     flask.session['linkback'] = flask.url_for("index")
-    return flask.render_template('404.html'), 404
+    return flask.render_template('not_found.html'), 404
 
 
 ###############
@@ -44,25 +54,6 @@ def page_not_found(error):
 #   These return JSON, rather than rendering pages.
 #
 ###############
-@app.route("/_calc_times")
-def _calc_times():
-    """
-    Calculates open/close times from miles, using rules
-    described at https://rusa.org/octime_alg.html.
-    Expects one URL-encoded argument, the number of miles.
-    """
-    app.logger.debug("Got a JSON request")
-    km = request.args.get('km', 999, type=float)
-    brevet_dist = request.args.get('brevet_dist', 0, type = float)
-    print("BREVET DISTANCE ", brevet_dist)
-    time = arrow.get(request.args.get('time', 0, type = str)).isoformat()
-    print("time:  ", time)
-    app.logger.debug("km={}".format(km))
-    app.logger.debug("request.args: {}".format(request.args))
-    open_time = acp_times.open_time(km, brevet_dist, time)
-    close_time = acp_times.close_time(km, brevet_dist, time)
-    result = {"open": open_time, "close": close_time}
-    return flask.jsonify(result=result)
 
 
 #############
