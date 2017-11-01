@@ -34,8 +34,7 @@ def index():
     for num in f:
         x = { } 
         parts = num.split(",")
-        x['key'] = parts[0]
-        x['value'] = [parts[1],parts[2]]
+        x[parts[0]] = [parts[1], parts[2]]
         poi.append(x)
     flask.g.poi = poi #to use in jinja
     return flask.render_template('map.html')

@@ -67,18 +67,24 @@ function initialize() {
   
 //start jinja
 
-{% for entry in g.poi %}
-    marker = new google.maps.Marker({
-    draggable: false,
-    position: new google.maps.LatLng({{g.poi['value'][1]}},{{g.poi['value'][2]}}),
-    map: map,
-    title: "{{g.poi['key'][0]}}"
-  });
-{% endfor %}
+{% for item in g.poi %}
+    {% for k, v1 in item.items() %}
+        var name = {{ k|tojson }}
+        var latlng = {{ v1|tojson }}
+        var lat = latlng[0];
+        var long = latlng[1];
+        var location = new google.maps.LatLng(lat, long);
+        placeMarker(location, map, name);
+    {% endfor %}
+  {% endfor %}
+
 //end the jinja loop
 //replace LatLng(44.045392,-123.06683) from thing in the g variable and title replace from dict
-
-    
+//top src async defer and if google api matters. Look at piazza
+//nosetests and secret key
+//don't need to use geocode if have map set to eugene right. Reverse geocode or format address? piazza
+//var marker instead of placeMarker?
+//infowindow
 }
 
 
