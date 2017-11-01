@@ -41,10 +41,8 @@ def index():
         else:   
             parts = line.split(':')
             parts = line.split(",")
-            print("THESE ARE THE PARTS: ", parts)
             x[parts[0]] = [parts[1], parts[2]]
             poi.append(x)
-            print(poi)
             flask.g.poi = poi #to use in jinja
     return flask.render_template('map.html')
 
