@@ -18,6 +18,7 @@ import logging
 app = flask.Flask(__name__)
 CONFIG = config.configuration()
 app.secret_key = CONFIG.SECRET_KEY
+app.api_key = CONFIG.API_KEY
 
 ###
 # Pages
@@ -28,15 +29,23 @@ app.secret_key = CONFIG.SECRET_KEY
 @app.route("/index")
 def index():
     app.logger.debug("Main page entry")
-    
+    flask.g.api_key = app.api_key
     f = open('long_lat.txt', 'r')
     poi = []
-    for num in f:
-        x = { } 
-        parts = num.split(",")
-        x[parts[0]] = [parts[1], parts[2]]
-        poi.append(x)
-    flask.g.poi = poi #to use in jinja
+    for line in f:
+        x = { }
+        line = line.strip()
+        if len(line) == 0 or line[0] == "#":
+            app.logger.debug("Skipping")
+            continue
+        else:   
+            parts = line.split(':')
+            parts = line.split(",")
+            print("THESE ARE THE PARTS: ", parts)
+            x[parts[0]] = [parts[1], parts[2]]
+            poi.append(x)
+            print(poi)
+            flask.g.poi = poi #to use in jinja
     return flask.render_template('map.html')
 
 
