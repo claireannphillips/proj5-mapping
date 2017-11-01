@@ -1,9 +1,8 @@
-Lat:
-<input id="lat" name="lat" val="44.0521" />Long:
-<input id="long" name="long" val="-123.0868" />
+
+
 <br />
 <br />
-<div id="map_canvas" style="width: 500px; height: 250px;"></div>
+<div id="map_canvas" style="width: 100%; height: 100%;"></div>
 
 
 
@@ -32,51 +31,20 @@ function initialize() {
   var myLatlng = new google.maps.LatLng(44.0521, -123.0868);
 
 
-
   var myOptions = {
-    zoom: 8,
+    zoom: 14,
     center: myLatlng,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-
-
-  };
-
-function dropPin(location, map, name){
-
-var marker = new google.maps.Marker
-    marker = new google.maps.Marker({
-    draggable: true,
-    position: location,
-    map: map,
-    title: "Your location"
-});
-
-var infowindow = new google.maps.InfoWindow({
-    content: name
-});
-
-google.maps.event.addListener(map, 'click', function(event) {
-
-  marker = new google.maps.Marker({
-  draggable: false,
-  position: myLatlng,
-  map: map,
-  title: "Your location"
-});
-  document.getElementById("lat").value = event.latLng.lat();
-  document.getElementById("long").value = event.latLng.lng();
-  marker.setPosition(event.latLng);
-});
-
-marker.addlistener('click', function() {
-	infowindow.open(map, marker);
-});
-
-  
-//start jinja
-
+  if (navigator.geolocation) {  
+	//If geolocation is supported by browser/device
+        navigator.geolocation.getCurrentPosition(function(position){
+        current_pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        dropPin(current_pos, map, "You are here ");
+    });
+  }
+	
 {% for item in g.poi %}
     {% for k, v1 in item.items() %}
         var name = {{ k|tojson }}
@@ -88,6 +56,35 @@ marker.addlistener('click', function() {
     {% endfor %}
   {% endfor %}
 
+}
+
+
+
+function dropPin(location, map, name){
+
+
+    var marker = new google.maps.Marker({
+    draggable: true,
+    position: location,
+    map: map,
+    title: "Your location"
+});
+
+var infowindow = new google.maps.InfoWindow({
+    content: name
+});
+
+
+google.maps.event.addListener(marker, 'click', function() {
+	infowindow.open(map, marker);
+});
+
+}
+  
+//start jinja
+
+
+
 //end the jinja loop
 //replace LatLng(44.045392,-123.06683) from thing in the g variable and title replace from dict
 //top src async defer and if google api matters. Look at piazza
@@ -95,7 +92,7 @@ marker.addlistener('click', function() {
 //don't need to use geocode if have map set to eugene right. Reverse geocode or format address? piazza
 //var marker instead of placeMarker?
 //infowindow
-}
+
 
 
 
